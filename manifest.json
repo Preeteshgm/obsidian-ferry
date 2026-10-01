@@ -1,0 +1,9 @@
+{
+  "id": "ferry",
+  "name": "Ferry",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Carry a folder of notes between two vaults as a single encrypted file. No server, no accounts — pack, send it any way you like, unpack.",
+  "author": "Preetesh Magadum",
+  "isDesktopOnly": false
+}

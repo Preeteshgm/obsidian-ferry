@@ -1,0 +1,163 @@
+/* Ferry — the preview is the only screen that needs styling, because it is the
+   screen where a person decides whether to let a parcel touch their vault. */
+
+.ferry-list {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 6px;
+	padding: 6px 10px;
+	margin: 10px 0;
+	font-size: var(--font-ui-small);
+}
+
+.ferry-row {
+	padding: 3px 0;
+	border-bottom: 1px solid var(--background-modifier-border-hover);
+}
+.ferry-row:last-child { border-bottom: 0; }
+
+.ferry-tag {
+	display: inline-block;
+	min-width: 7.5em;
+	font-size: var(--font-ui-smaller);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.ferry-add       { color: var(--color-green); }
+.ferry-change    { color: var(--color-blue); }
+.ferry-conflict  { color: var(--color-orange); }
+.ferry-delete    { color: var(--color-red); }
+.ferry-skip      { color: var(--text-muted); }
+
+.ferry-missing {
+	border-left: 3px solid var(--color-orange);
+	padding: 6px 0 6px 10px;
+	margin: 10px 0;
+	font-size: var(--font-ui-small);
+}
+.ferry-missing ul { margin: 4px 0 6px; padding-left: 18px; }
+
+.ferry-warning {
+	border-left: 3px solid var(--color-red);
+	padding: 6px 0 6px 10px;
+	margin: 10px 0;
+	font-size: var(--font-ui-small);
+}
+
+/* The panel: the state of the exchange, visible rather than remembered. */
+.ferry-panel { padding: 0 12px 16px; }
+.ferry-panel h4 { margin: 12px 0 8px; }
+.ferry-muted { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+
+.ferry-who {
+	font-size: var(--font-ui-small);
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ferry-status {
+	text-align: center;
+	padding: 14px 0 12px;
+	font-size: var(--font-ui-small);
+}
+.ferry-big {
+	font-size: 2.4em;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--text-accent);
+}
+
+.ferry-actions .setting-item { padding: 8px 0; border: 0; }
+.ferry-actions .setting-item-name { font-size: var(--font-ui-small); }
+
+.ferry-box {
+	margin: 10px 0;
+	padding-top: 8px;
+	border-top: 1px solid var(--background-modifier-border);
+}
+.ferry-label {
+	font-size: var(--font-ui-smaller);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--text-muted);
+	margin-bottom: 4px;
+}
+.ferry-file {
+	font-size: var(--font-ui-smaller);
+	font-family: var(--font-monospace);
+	padding: 3px 0;
+	word-break: break-all;
+}
+.ferry-row-action {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	justify-content: space-between;
+}
+.ferry-row-action button { flex: none; }
+
+.ferry-statusbar { cursor: pointer; }
+
+.ferry-topic {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	font-size: var(--font-ui-smaller);
+	padding: 3px 0;
+}
+.ferry-topic-name { word-break: break-all; }
+.ferry-topic-owner { color: var(--text-muted); flex: none; }
+.ferry-mine .ferry-topic-name { font-weight: 600; }
+.ferry-mine .ferry-topic-owner { color: var(--text-accent); }
+
+.ferry-setup {
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	padding: 4px 10px 8px;
+	margin-bottom: 10px;
+}
+.ferry-setup .setting-item { padding: 8px 0; border: 0; }
+.ferry-setup .setting-item-name { font-size: var(--font-ui-small); }
+.ferry-setup input[type="text"],
+.ferry-setup input[type="password"] { width: 11em; }
+
+.ferry-who { display: flex; align-items: baseline; gap: 4px; }
+.ferry-gear {
+	margin-left: auto;
+	font-size: var(--font-ui-smaller);
+	padding: 2px 8px;
+}
+
+/* A parcel dropped anywhere on the panel is opened. */
+.ferry-dropping {
+	outline: 2px dashed var(--text-accent);
+	outline-offset: -6px;
+	background: color-mix(in srgb, var(--text-accent) 6%, transparent);
+}
+
+.ferry-scroll { max-height: 12em; overflow-y: auto; }
+
+.ferry-readonly {
+	opacity: 0.75;
+	cursor: not-allowed;
+}
+
+/* The explanation on the settings screen — where people go when unsure. */
+.ferry-help { margin-bottom: 18px; font-size: var(--font-ui-small); }
+.ferry-help p { color: var(--text-muted); }
+.ferry-help dl { margin: 10px 0 0; }
+.ferry-help dt {
+	font-weight: 600;
+	margin-top: 8px;
+	color: var(--text-normal);
+}
+.ferry-help dd {
+	margin: 2px 0 0 0;
+	color: var(--text-muted);
+	line-height: 1.4;
+}
+.ferry-help-note {
+	margin-top: 12px;
+	border-left: 3px solid var(--text-accent);
+	padding-left: 10px;
+}
