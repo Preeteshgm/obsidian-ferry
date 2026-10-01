@@ -44,7 +44,7 @@ export class FerryView extends ItemView {
 		return "Ferry";
 	}
 	getIcon(): string {
-		return "package";
+		return "ferry-boat";
 	}
 
 	async onOpen(): Promise<void> {

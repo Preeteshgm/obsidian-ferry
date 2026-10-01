@@ -11,7 +11,7 @@
  * one implementation of each operation and two ways to reach it.
  */
 
-import { Notice, Plugin, TFolder, WorkspaceLeaf } from "obsidian";
+import { addIcon, Notice, Plugin, TFolder, WorkspaceLeaf } from "obsidian";
 import { DEFAULT_SETTINGS, type FerrySettings } from "./types";
 import { FerrySettingTab } from "./settings";
 import { pack } from "./pack";
@@ -54,6 +54,18 @@ export interface TeamStatus {
 	waiting: number;
 }
 
+/** A ferry: hull, cabin, mast and flag, over water. Drawn in a 100-unit box
+ *  with a stroke weight that lands on 2px at the usual 24px icon size. */
+const FERRY_ICON = `
+<g fill="none" stroke="currentColor" stroke-width="8"
+   stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 60 H86 L74 78 H26 Z"/>
+  <path d="M36 60 V44 H64 V60"/>
+  <path d="M64 44 V16"/>
+  <path d="M64 18 H84 V30 H64"/>
+  <path d="M8 90 q 7 -9 14 0 t 14 0 t 14 0 t 14 0 t 14 0"/>
+</g>`;
+
 export default class FerryPlugin extends Plugin {
 	settings: FerrySettings = { ...DEFAULT_SETTINGS };
 	private statusBar: HTMLElement | null = null;
@@ -70,8 +82,9 @@ export default class FerryPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new FerrySettingTab(this.app, this));
 
+		addIcon("ferry-boat", FERRY_ICON);
 		this.registerView(VIEW_TYPE_FERRY, (leaf) => new FerryView(leaf, this));
-		this.addRibbonIcon("package", "Ferry", () => void this.openPanel());
+		this.addRibbonIcon("ferry-boat", "Ferry", () => void this.openPanel());
 
 		this.statusBar = this.addStatusBarItem();
 		this.statusBar.addClass("ferry-statusbar");
