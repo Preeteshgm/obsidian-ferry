@@ -121,7 +121,17 @@ export class FerryView extends ItemView {
 		return box;
 	}
 
-	/** An icon-only button for anything secondary. */
+	/**
+	 * An icon-only button for anything secondary.
+	 *
+	 * `clickable-icon` is Obsidian's own class, so size, colour, hover and focus
+	 * come from the theme rather than from here — which is the only way these
+	 * stay right when somebody changes theme.
+	 *
+	 * Only `aria-label` is set, never `title`. Obsidian draws its own tooltip
+	 * from aria-label; adding title makes the browser draw a second one on top
+	 * of it.
+	 */
 	private iconButton(
 		parent: HTMLElement,
 		icon: string,
@@ -129,10 +139,9 @@ export class FerryView extends ItemView {
 		onClick: () => void,
 		cls = "",
 	): HTMLButtonElement {
-		const b = parent.createEl("button", { cls: `ferry-icon-btn ${cls}`.trim() });
+		const b = parent.createEl("button", { cls: `clickable-icon ${cls}`.trim() });
 		setIcon(b, icon);
 		b.setAttr("aria-label", tooltip);
-		b.setAttr("title", tooltip);
 		b.disabled = this.busy;
 		b.addEventListener("click", onClick);
 		return b;

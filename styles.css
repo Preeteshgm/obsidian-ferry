@@ -200,30 +200,22 @@
 	flex: none;
 }
 
-.ferry-icon-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 4px;
+/* Obsidian's clickable-icon carries size, colour, hover and focus. The only
+   thing it cannot know is that this particular one deletes something. */
+.ferry-panel button.clickable-icon {
 	background: transparent;
 	box-shadow: none;
-	color: var(--text-muted);
-	cursor: pointer;
+	padding: 4px;
 }
-.ferry-icon-btn:hover {
+.ferry-panel button.clickable-icon:hover:not([disabled]) {
 	background: var(--background-modifier-hover);
-	color: var(--text-normal);
 }
-.ferry-icon-btn .svg-icon {
-	width: 15px;
-	height: 15px;
-}
-.ferry-icon-btn.ferry-del:hover {
-	color: var(--text-error);
-}
-.ferry-icon-btn[disabled] {
+.ferry-panel button.clickable-icon[disabled] {
 	opacity: 0.4;
 	cursor: default;
+}
+.ferry-panel button.clickable-icon.ferry-del:hover:not([disabled]) {
+	color: var(--text-error);
 }
 
 .ferry-box-foot {
