@@ -17,7 +17,7 @@ import { FerrySettingTab } from "./settings";
 import { pack } from "./pack";
 import { apply, plan, read, readBytes, type Parcel } from "./unpack";
 import { latestBackup, prune, undo } from "./backup";
-import { ensureFolder, exists, join, scan, writeBinary } from "./vaultio";
+import { ensureFolder, exists, join, scan, trash, writeBinary } from "./vaultio";
 import { filesFromScan, fromPeer, knownPeers, loadState, PUBLISHED } from "./state";
 import { countByTopic, MARKER, markerBody, ownerOf, ownsNothing, readOwners, sameName } from "./owners";
 import { ConfirmModal, FolderPicker, ParcelPicker, PassphraseModal, PreviewModal } from "./ui/modals";
@@ -245,6 +245,24 @@ export default class FerryPlugin extends Plugin {
 			);
 		} catch (err) {
 			this.fail(err);
+		}
+	}
+
+    /**
+	 * Remove a parcel, to the vault trash.
+	 *
+	 * Not to nothing: an outbox parcel is sometimes the one you need to resend,
+	 * because a parcel is a delta from a particular state and the only other way
+	 * to catch somebody up is a full republish.
+	 */
+	async deleteParcel(path: string): Promise<void> {
+		try {
+			await trash(this.app, path);
+			new Notice(`Ferry: ${path.split("/").pop()} moved to the trash.`, 6000);
+		} catch (err) {
+			this.fail(err);
+		} finally {
+			await this.afterChange();
 		}
 	}
 

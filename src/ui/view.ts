@@ -15,10 +15,11 @@
  *   it is visible rather than hidden in a file somebody has to open.
  */
 
-import { ItemView, Setting, TFolder, WorkspaceLeaf } from "obsidian";
+import { ItemView, setIcon, Setting, TFolder, WorkspaceLeaf } from "obsidian";
 import type FerryPlugin from "../main";
 import type { Change, TeamStatus } from "../main";
 import { FolderPicker, RenameModal } from "./modals";
+import { join } from "../vaultio";
 
 export const VIEW_TYPE_FERRY = "ferry-panel";
 
@@ -110,6 +111,32 @@ export class FerryView extends ItemView {
 	}
 
 	// ----------------------------------------------------------------- render
+
+	/** A section heading: an icon to find it by, and a label to read. */
+	private section(el: HTMLElement, icon: string, label: string): HTMLElement {
+		const box = el.createDiv({ cls: "ferry-box" });
+		const head = box.createDiv({ cls: "ferry-label" });
+		setIcon(head.createSpan({ cls: "ferry-label-icon" }), icon);
+		head.createSpan({ text: label });
+		return box;
+	}
+
+	/** An icon-only button for anything secondary. */
+	private iconButton(
+		parent: HTMLElement,
+		icon: string,
+		tooltip: string,
+		onClick: () => void,
+		cls = "",
+	): HTMLButtonElement {
+		const b = parent.createEl("button", { cls: `ferry-icon-btn ${cls}`.trim() });
+		setIcon(b, icon);
+		b.setAttr("aria-label", tooltip);
+		b.setAttr("title", tooltip);
+		b.disabled = this.busy;
+		b.addEventListener("click", onClick);
+		return b;
+	}
 
 	private render(): void {
 		const el = this.contentEl;
@@ -305,11 +332,11 @@ export class FerryView extends ItemView {
 
 		// What will go, before it goes — the same courtesy the unpack side gives.
 		if (s && (s.changes.length || s.scope.length)) {
-			const what = el.createDiv({ cls: "ferry-box" });
-			what.createDiv({
-				cls: "ferry-label",
-				text: s.publishedAt ? "Will publish" : "Will publish — everything you own",
-			});
+			const what = this.section(
+				el,
+				"file-up",
+				s.publishedAt ? "Will publish" : "Will publish — everything you own",
+			);
 			what.createDiv({
 				cls: "ferry-muted",
 				text: s.scope.length ? `from ${s.scope.join(" · ")}` : "nothing is yours yet",
@@ -349,30 +376,61 @@ export class FerryView extends ItemView {
 				.setDesc("To bring somebody who has fallen behind back in step.")
 				.addExtraButton((b) =>
 					b
-						.setIcon("refresh-cw")
+						.setIcon("rotate-ccw")
 						.setTooltip("Send everything you own again")
 						.onClick(() => void this.act(() => this.plugin.doPack(true))),
 				);
 		}
 
 		if (this.outbox.length) {
-			const out = el.createDiv({ cls: "ferry-box" });
-			out.createDiv({ cls: "ferry-label", text: "Sent — attach these to an email" });
-			for (const path of this.outbox.slice(0, 4)) {
-				const row = out.createDiv({ cls: "ferry-file ferry-row-action" });
-				row.createSpan({ text: basename(path) });
-				const btn = row.createEl("button", { text: "Show" });
-				btn.addEventListener("click", () => this.plugin.showInFolder(path));
-			}
-			if (this.outbox.length > 4) {
-				out.createDiv({ cls: "ferry-muted", text: `and ${this.outbox.length - 4} more` });
-			}
+			const out = this.section(el, "send", "Sent — attach to an email");
+			this.renderParcels(out, this.outbox, join(this.plugin.settings.ferryFolder, "outbox"));
 		}
 	}
 
+	/**
+	 * One list of parcels, with the controls a person expects: reveal it, remove
+	 * it, or open the folder and deal with the lot by hand.
+	 */
+	private renderParcels(
+		box: HTMLElement,
+		paths: string[],
+		folder: string,
+		action?: { label: string; run: (path: string) => Promise<void> },
+	): void {
+		const shown = paths.slice(0, 5);
+		for (const path of shown) {
+			const row = box.createDiv({ cls: "ferry-file ferry-row-action" });
+			row.createSpan({ cls: "ferry-file-name", text: basename(path) });
+
+			const buttons = row.createDiv({ cls: "ferry-row-buttons" });
+			if (action) {
+				const go = buttons.createEl("button", { text: action.label, cls: "mod-cta" });
+				go.disabled = this.busy;
+				go.addEventListener("click", () => void this.act(() => action.run(path)));
+			}
+			this.iconButton(buttons, "folder-open", "Show in folder", () =>
+				this.plugin.showInFolder(path),
+			);
+			this.iconButton(
+				buttons,
+				"trash-2",
+				"Delete — goes to the vault trash",
+				() => void this.act(() => this.plugin.deleteParcel(path)),
+				"ferry-del",
+			);
+		}
+		if (paths.length > shown.length) {
+			box.createDiv({ cls: "ferry-muted", text: `and ${paths.length - shown.length} more` });
+		}
+		const foot = box.createDiv({ cls: "ferry-box-foot" });
+		this.iconButton(foot, "folder", "Open the folder and manage them by hand", () =>
+			this.plugin.showInFolder(paths[0] ?? folder),
+		);
+	}
+
 	private renderReceive(el: HTMLElement): void {
-		const box = el.createDiv({ cls: "ferry-box" });
-		box.createDiv({ cls: "ferry-label", text: "Receive" });
+		const box = this.section(el, "inbox", "Receive");
 
 		// A hidden file input is the only way to reach the device's own file
 		// picker, and it works on desktop and on mobile alike.
@@ -403,19 +461,15 @@ export class FerryView extends ItemView {
 				cls: "ferry-label",
 				text: `In ${this.plugin.settings.ferryFolder}/inbox`,
 			});
-			for (const path of this.inbox) {
-				const row = box.createDiv({ cls: "ferry-file ferry-row-action" });
-				row.createSpan({ text: basename(path) });
-				const btn = row.createEl("button", { text: "Unpack" });
-				btn.disabled = this.busy;
-				btn.addEventListener("click", () => void this.act(() => this.plugin.doUnpack(path)));
-			}
+			this.renderParcels(box, this.inbox, join(this.plugin.settings.ferryFolder, "inbox"), {
+				label: "Unpack",
+				run: (path) => this.plugin.doUnpack(path),
+			});
 		}
 	}
 
 	private renderTopics(el: HTMLElement, s: TeamStatus | null): void {
-		const box = el.createDiv({ cls: "ferry-box" });
-		box.createDiv({ cls: "ferry-label", text: "Topics" });
+		const box = this.section(el, "folder-tree", "Topics");
 		if (!s || s.open) {
 			box.createDiv({
 				cls: "ferry-muted",
@@ -438,8 +492,7 @@ export class FerryView extends ItemView {
 
 	private renderTeam(el: HTMLElement, s: TeamStatus | null): void {
 		if (!s?.peers.length) return;
-		const box = el.createDiv({ cls: "ferry-box" });
-		box.createDiv({ cls: "ferry-label", text: "Last heard from" });
+		const box = this.section(el, "users", "Last heard from");
 		for (const peer of s.peers) {
 			const row = box.createDiv({ cls: "ferry-topic" });
 			row.createSpan({ cls: "ferry-topic-name", text: peer.peer });
@@ -464,11 +517,11 @@ export class FerryView extends ItemView {
 			);
 		new Setting(box)
 			.setName("Clean up")
-			.setDesc(`Older than ${this.plugin.settings.retentionDays} days.`)
-			.addButton((b) =>
+			.setDesc(`Snapshots and parcels older than ${this.plugin.settings.retentionDays} days.`)
+			.addExtraButton((b) =>
 				b
-					.setButtonText("Prune")
-					.setDisabled(this.busy)
+					.setIcon("trash-2")
+					.setTooltip("Prune")
 					.onClick(() => void this.act(() => this.plugin.doPrune())),
 			);
 	}

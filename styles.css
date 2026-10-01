@@ -165,3 +165,73 @@
 .ferry-wide-input { width: 22em; }
 .ferry-preview-list { max-height: 18em; overflow-y: auto; }
 .ferry-hidden { display: none; }
+
+/* ── Panel: a narrow column, so secondary actions are icons ───────────── */
+.ferry-label {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.ferry-label-icon {
+	display: flex;
+	opacity: 0.7;
+}
+.ferry-label-icon .svg-icon {
+	width: 13px;
+	height: 13px;
+}
+
+.ferry-row-action {
+	gap: 6px;
+	align-items: center;
+	padding: 4px 0;
+}
+.ferry-file-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.ferry-row-buttons {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	flex: none;
+}
+
+.ferry-icon-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--text-muted);
+	cursor: pointer;
+}
+.ferry-icon-btn:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-normal);
+}
+.ferry-icon-btn .svg-icon {
+	width: 15px;
+	height: 15px;
+}
+.ferry-icon-btn.ferry-del:hover {
+	color: var(--text-error);
+}
+.ferry-icon-btn[disabled] {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.ferry-box-foot {
+	display: flex;
+	justify-content: flex-end;
+	padding-top: 2px;
+}
+
+/* The row of buttons inside a Setting is noisy at this width. */
+.ferry-panel .setting-item { padding: 8px 0; border: 0; }
+.ferry-panel .setting-item-description { font-size: var(--font-ui-smaller); }
