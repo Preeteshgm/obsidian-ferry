@@ -166,11 +166,17 @@ export class FerryView extends ItemView {
 		const head = el.createDiv({ cls: "ferry-who" });
 		head.createSpan({ text: me });
 		head.createSpan({ cls: "ferry-muted", text: ` · ${shareRoot}` });
-		const gear = head.createEl("button", { cls: "ferry-gear", text: this.setupOpen ? "Done" : "Setup" });
-		gear.addEventListener("click", () => {
-			this.setupOpen = !this.setupOpen;
-			this.render();
-		});
+		// The app's own icon button, so it matches whatever theme is running.
+		this.iconButton(
+			head,
+			this.setupOpen ? "check" : "settings",
+			this.setupOpen ? "Done" : "Setup",
+			() => {
+				this.setupOpen = !this.setupOpen;
+				this.render();
+			},
+			"ferry-gear",
+		);
 
 		if (s?.ownsNothing) {
 			const warn = el.createDiv({ cls: "ferry-warning" });

@@ -122,11 +122,7 @@
 .ferry-setup input[type="password"] { width: 11em; }
 
 .ferry-who { display: flex; align-items: baseline; gap: 4px; }
-.ferry-gear {
-	margin-left: auto;
-	font-size: var(--font-ui-smaller);
-	padding: 2px 8px;
-}
+.ferry-gear { margin-left: auto; }
 
 /* A parcel dropped anywhere on the panel is opened. */
 .ferry-dropping {
