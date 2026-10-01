@@ -334,7 +334,7 @@ export class FerryView extends ItemView {
 		if (s && (s.changes.length || s.scope.length)) {
 			const what = this.section(
 				el,
-				"file-up",
+				"upload",
 				s.publishedAt ? "Will publish" : "Will publish — everything you own",
 			);
 			what.createDiv({
@@ -469,7 +469,7 @@ export class FerryView extends ItemView {
 	}
 
 	private renderTopics(el: HTMLElement, s: TeamStatus | null): void {
-		const box = this.section(el, "folder-tree", "Topics");
+		const box = this.section(el, "layers", "Topics");
 		if (!s || s.open) {
 			box.createDiv({
 				cls: "ferry-muted",
