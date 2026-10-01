@@ -38,12 +38,48 @@ Excalidraw, HTML, anything in the folder. Ferry does not interpret content.
 A `.ferry` file is an encrypted zip.
 
 ```
-FERRY\x01              6-byte magic
+FERRY                  5-byte magic
+version                1 byte            0x01 or 0x02
 salt                   16 bytes          PBKDF2
 iv                     12 bytes          AES-GCM
 iterations             4 bytes, big-endian
 ciphertext             AES-GCM-256 over the zip below
 ```
+
+### The header is hostile input
+
+Everything above is read **before** anything can be authenticated, because the
+key has to be derived before AES-GCM can check its tag. A parcel arrives as an
+email attachment, so the header is a stranger's writing rather than ours coming
+back to us.
+
+The iteration count is the field that bites, because it decides how much work
+we do. Unchecked, a one-byte edit asks for four billion rounds and Obsidian
+stops responding for hours. It cannot leak anything — a wrong count derives a
+wrong key and the tag fails — so this is denial of service, not disclosure.
+
+Two defences, in that order of importance:
+
+**Bounds, checked first.** The count must be between **100,000 and 2,000,000**.
+This is the one that actually stops the attack, because it is the only check
+that can happen before the expensive work. The range leaves room to raise the
+writer's count later without orphaning anything already sent.
+
+**The header as additional authenticated data.** In format 2, AES-GCM covers
+the magic, version, salt, IV and iteration count, so any edit fails
+authentication instead of producing a confusing wrong-passphrase error. It
+cannot prevent the work above — deriving must come before verifying — but it
+turns silent corruption into a clear failure.
+
+### Versions
+
+| | |
+|---|---|
+| **0x01** | Sealed without additional data, so it is opened without it and parcels sent before this change still work. It gets the bounds check too, which costs it nothing: the only writer that ever existed used 310,000. |
+| **0x02** | Identical layout, header bound as AAD. Everything written from now on. |
+
+An unknown version is refused, asking for a newer Ferry. The layout did not
+change, so a format 2 parcel is the same size as a format 1 one.
 
 The zip inside:
 
