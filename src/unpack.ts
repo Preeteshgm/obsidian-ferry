@@ -102,7 +102,8 @@ export async function plan(
 		const bytes = parcel.files[entry.path];
 		if (!bytes) continue;
 		try {
-			const claimed = String(JSON.parse(new TextDecoder().decode(bytes)).owner ?? "").trim();
+			const parsed = JSON.parse(new TextDecoder().decode(bytes)) as { owner?: unknown };
+			const claimed = String(parsed.owner ?? "").trim();
 			const prefix = entry.path === MARKER ? "" : entry.path.slice(0, -(MARKER.length + 1));
 			const currently = ownerOf(owners, entry.path, sender);
 			// Claiming something unowned, or handing on something that is theirs.

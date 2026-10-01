@@ -53,7 +53,8 @@ export async function readOwners(
 		if (!isMarker(file.path)) continue;
 		try {
 			const text = new TextDecoder().decode(await readBinary(app, join(shareRoot, file.path)));
-			const owner = String(JSON.parse(text).owner ?? "").trim();
+			const parsed = JSON.parse(text) as { owner?: unknown };
+			const owner = String(parsed.owner ?? "").trim();
 			if (!owner) continue;
 			topics.push({
 				prefix: file.path === MARKER ? "" : file.path.slice(0, -(MARKER.length + 1)),

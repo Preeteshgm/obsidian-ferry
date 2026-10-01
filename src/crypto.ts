@@ -79,7 +79,7 @@ export async function open(parcel: Uint8Array, passphrase: string): Promise<Uint
 		const plain = await crypto.subtle.decrypt(
 			{ name: "AES-GCM", iv: iv as BufferSource },
 			key,
-			cipher as BufferSource,
+			cipher,
 		);
 		return new Uint8Array(plain);
 	} catch {

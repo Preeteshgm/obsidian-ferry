@@ -486,13 +486,13 @@ export default class FerryPlugin extends Plugin {
 	async openPanel(): Promise<void> {
 		const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_FERRY);
 		if (existing.length) {
-			await this.app.workspace.revealLeaf(existing[0]);
+			this.app.workspace.revealLeaf(existing[0]);
 			return;
 		}
 		const leaf: WorkspaceLeaf | null = this.app.workspace.getRightLeaf(false);
 		if (!leaf) return;
 		await leaf.setViewState({ type: VIEW_TYPE_FERRY, active: true });
-		await this.app.workspace.revealLeaf(leaf);
+		this.app.workspace.revealLeaf(leaf);
 	}
 
 	openSettings(): void {
@@ -585,7 +585,8 @@ export default class FerryPlugin extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const stored = (await this.loadData()) as Partial<FerrySettings> | null;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, stored ?? {});
 	}
 
 	async saveSettings(): Promise<void> {

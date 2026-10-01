@@ -25,7 +25,7 @@ export class PassphraseModal extends Modal {
 		this.titleEl.setText(this.title);
 		const field = new Setting(this.contentEl).setName("Passphrase").addText((t) => {
 			t.inputEl.type = "password";
-			t.inputEl.style.width = "22em";
+			t.inputEl.addClass("ferry-wide-input");
 			t.onChange((v) => (this.value = v));
 			t.inputEl.addEventListener("keydown", (e) => {
 				if (e.key === "Enter") this.finish(this.value);
@@ -247,24 +247,22 @@ export class PreviewModal extends Modal {
 				li.createEl("a", { text: req.name, href: storeUrl(req.id) });
 				if (req.reason) li.appendText(` — ${req.reason}`);
 			}
-			box.createEl("div", {
+			box.createDiv({
 				cls: "mod-muted",
 				text: "The files will still arrive; they just will not render fully until these are installed.",
 			});
 		}
 
-		const listEl = contentEl.createDiv({ cls: "ferry-list" });
-		listEl.style.maxHeight = "18em";
-		listEl.style.overflowY = "auto";
+		const listEl = contentEl.createDiv({ cls: "ferry-list ferry-preview-list" });
 		for (const item of plan.items) {
 			if (item.kind === "identical") continue;
 			const row = listEl.createDiv({ cls: "ferry-row" });
 			row.createSpan({ cls: `ferry-tag ${LABELS[item.kind].cls}`, text: LABELS[item.kind].label });
 			row.createSpan({ text: ` ${item.path}` });
 			if (item.conflictPath) {
-				row.createEl("div", { cls: "mod-muted", text: `kept as: ${item.conflictPath}` });
+				row.createDiv({ cls: "mod-muted", text: `kept as: ${item.conflictPath}` });
 			} else if (item.note) {
-				row.createEl("div", { cls: "mod-muted", text: item.note });
+				row.createDiv({ cls: "mod-muted", text: item.note });
 			}
 		}
 

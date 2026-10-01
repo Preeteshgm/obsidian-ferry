@@ -31,7 +31,7 @@ export async function writeBinary(app: App, path: string, data: Uint8Array): Pro
 	// A fresh ArrayBuffer: the adapter keeps a reference, and `data` may be a
 	// view onto a larger buffer handed back by the unzipper.
 	const copy = data.slice();
-	await app.vault.adapter.writeBinary(p, copy.buffer as ArrayBuffer);
+	await app.vault.adapter.writeBinary(p, copy.buffer);
 }
 
 export async function ensureFolder(app: App, folder: string): Promise<void> {
@@ -47,7 +47,7 @@ export async function trash(app: App, path: string): Promise<void> {
 	const p = normalizePath(path);
 	const file = app.vault.getAbstractFileByPath(p);
 	if (file instanceof TFile) {
-		await app.vault.trash(file, true);
+		await app.fileManager.trashFile(file);
 		return;
 	}
 	if (await app.vault.adapter.exists(p)) await app.vault.adapter.trashLocal(p);

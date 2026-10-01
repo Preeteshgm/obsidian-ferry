@@ -130,7 +130,7 @@ export class FerryView extends ItemView {
 		if (s?.ownsNothing) {
 			const warn = el.createDiv({ cls: "ferry-warning" });
 			warn.createEl("strong", { text: "Nothing here belongs to you." });
-			warn.createEl("div", {
+			warn.createDiv({
 				text:
 					`You are "${me}"` +
 					(s.rootOwner ? `, and the share root belongs to "${s.rootOwner}".` : ".") +
@@ -364,8 +364,11 @@ export class FerryView extends ItemView {
 
 		// A hidden file input is the only way to reach the device's own file
 		// picker, and it works on desktop and on mobile alike.
-		const picker = box.createEl("input", { type: "file", attr: { accept: ".ferry" } });
-		picker.style.display = "none";
+		const picker = box.createEl("input", {
+			type: "file",
+			cls: "ferry-hidden",
+			attr: { accept: ".ferry" },
+		});
 		picker.addEventListener("change", () => {
 			const file = picker.files?.[0];
 			picker.value = "";

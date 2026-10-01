@@ -161,3 +161,7 @@
 	border-left: 3px solid var(--text-accent);
 	padding-left: 10px;
 }
+
+.ferry-wide-input { width: 22em; }
+.ferry-preview-list { max-height: 18em; overflow-y: auto; }
+.ferry-hidden { display: none; }
