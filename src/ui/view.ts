@@ -97,7 +97,16 @@ export class FerryView extends ItemView {
 		value: FerryPlugin["settings"][K],
 	): Promise<void> {
 		this.plugin.settings[key] = value;
-		await this.plugin.saveSettings();
+		// Quietly: a redraw here would destroy the field being typed into.
+		await this.plugin.saveQuiet();
+	}
+
+	/** Catch up once the person has finished with a field. */
+	private onSettled(el: HTMLInputElement): void {
+		this.registerDomEvent(el, "blur", () => void this.refresh());
+		this.registerDomEvent(el, "keydown", (e) => {
+			if (e.key === "Enter") el.blur();
+		});
 	}
 
 	// ----------------------------------------------------------------- render
@@ -188,27 +197,27 @@ export class FerryView extends ItemView {
 		} else {
 			nameSetting
 				.setDesc("How the team tells parcels apart. Pick one and keep it.")
-				.addText((t) =>
-					t
-						.setPlaceholder("alice")
+				.addText((t) => {
+					t.setPlaceholder("alice")
 						.setValue(this.plugin.settings.me)
 						.onChange(async (v) => {
 							await this.save("me", v.trim());
-						}),
-				);
+						});
+					this.onSettled(t.inputEl);
+				});
 		}
 
 		new Setting(box)
 			.setName("Share root")
 			.setDesc("The folder that travels. Spelled the same in every vault.")
-			.addText((t) =>
-				t
-					.setPlaceholder("Projects")
+			.addText((t) => {
+				t.setPlaceholder("Projects")
 					.setValue(this.plugin.settings.shareRoot)
 					.onChange(async (v) => {
 						await this.save("shareRoot", v.replace(/^\/+|\/+$/g, "").trim());
-					}),
-			)
+					});
+				this.onSettled(t.inputEl);
+			})
 			.addExtraButton((b) =>
 				b
 					.setIcon("folder")
@@ -236,10 +245,13 @@ export class FerryView extends ItemView {
 				t.inputEl.type = "password";
 				t.setValue(this.plugin.settings.passphrase).onChange(async (v) => {
 					await this.save("passphrase", v);
+					// Typing one here is consent to keep it; the toggle below
+					// exists to take that back, not to grant it.
 					if (v && !this.plugin.settings.rememberPassphrase) {
 						await this.save("rememberPassphrase", true);
 					}
 				});
+				this.onSettled(t.inputEl);
 			});
 
 		new Setting(box)

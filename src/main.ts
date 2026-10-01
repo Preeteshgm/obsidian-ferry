@@ -57,6 +57,14 @@ export interface TeamStatus {
 export default class FerryPlugin extends Plugin {
 	settings: FerrySettings = { ...DEFAULT_SETTINGS };
 	private statusBar: HTMLElement | null = null;
+	/**
+	 * Held for this session only, when the passphrase is not stored.
+	 *
+	 * Asking once a session is the honest middle ground: nothing is written to
+	 * the vault, and nobody is retyping a long passphrase to publish twice in a
+	 * morning. Forgotten the moment Obsidian closes, or the moment one fails.
+	 */
+	private sessionPassphrase: string | null = null;
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
@@ -88,6 +96,7 @@ export default class FerryPlugin extends Plugin {
 
 	onunload(): void {
 		this.statusBar?.remove();
+		this.sessionPassphrase = null;
 	}
 
 	/**
@@ -573,13 +582,20 @@ export default class FerryPlugin extends Plugin {
 		if (this.settings.rememberPassphrase && this.settings.passphrase) {
 			return Promise.resolve(this.settings.passphrase);
 		}
+		if (this.sessionPassphrase) return Promise.resolve(this.sessionPassphrase);
 		return new Promise((resolve) => {
-			new PassphraseModal(this.app, title, resolve).open();
+			new PassphraseModal(this.app, title, (value) => {
+				if (value) this.sessionPassphrase = value;
+				resolve(value);
+			}).open();
 		});
 	}
 
 	private fail(err: unknown): void {
 		const message = err instanceof Error ? err.message : String(err);
+		// A rejected passphrase must not be remembered, or every later attempt
+		// fails the same way without asking again.
+		if (message.includes("passphrase")) this.sessionPassphrase = null;
 		new Notice(`Ferry: ${message}`, 12000);
 		console.error("[ferry]", err);
 	}
@@ -593,5 +609,16 @@ export default class FerryPlugin extends Plugin {
 		await this.saveData(this.settings);
 		await this.prepare();
 		await this.afterChange();
+	}
+
+	/**
+	 * Write the settings and redraw nothing.
+	 *
+	 * The panel's own fields use this. Refreshing on every keystroke rebuilds
+	 * the panel, which destroys the input being typed into — so the field is
+	 * saved quietly and the panel catches up when focus leaves it.
+	 */
+	async saveQuiet(): Promise<void> {
+		await this.saveData(this.settings);
 	}
 }
