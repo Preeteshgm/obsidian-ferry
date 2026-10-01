@@ -1,13 +1,60 @@
 # Ferry
 
-Carry a folder of notes between two vaults as a single encrypted file.
+Carry a folder of notes between vaults as a single encrypted file.
 
-No server, no accounts, nobody online at the same time. One side **packs** what
-has changed; the file travels however you like — email, chat, a USB stick — and
-the other side **unpacks** it into the same place in their vault.
+No server, no accounts, nobody online at the same time. One side **publishes**
+what has changed; the file travels however you like — email, chat, a USB stick
+— and the other side **unpacks** it into the same place in their vault, after
+seeing exactly what will change.
+
+![How Ferry works](docs/images/how-it-works.svg)
 
 It carries whatever is in the folder: markdown, canvases, images, PDFs,
 Excalidraw drawings, HTML. Ferry does not interpret content.
+
+## For a team
+
+Each folder is claimed by one person. A marker inside it names the owner, so
+only they can transfer it — and because two people never write the same file,
+nobody has to arbitrate.
+
+![One owner per topic](docs/images/ownership.svg)
+
+## In the panel
+
+Everything is in one place: what you owe the team, what is waiting for you, and
+who owns what.
+
+```
+ Ferry                               preetesh · Projects   [Setup]
+
+                      3
+            2 new · 1 changed · 0 deleted
+          last published 1 Oct 2026, 11:20
+
+ WILL PUBLISH
+ from Projects/Packaging · Projects/Reporting
+   NEW       Packaging/IWP-12.md
+   CHANGED   Packaging/Readiness.canvas
+   NEW       Reporting/Week 38.md
+
+ Publish                              [ Publish ]
+ Everything I own                          [ ⟳ ]
+
+ SENT — ATTACH THESE TO AN EMAIL
+   projects-20261001-1120.ferry          [ Show ]
+
+ RECEIVE
+ Open a parcel                   [ Choose a file ]
+ …or drop one on this panel
+
+ TOPICS
+   Packaging/                                 you
+   Architecture/                             omar
+   Field/                                    sara
+
+ Undo the last unpack                     [ Undo ]
+```
 
 ---
 

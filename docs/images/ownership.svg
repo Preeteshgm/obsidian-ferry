@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" width="960" height="330"
+     role="img" aria-label="One share root split into topics, each owned by one person; everyone publishes only their own topic, so two people never write the same file.">
+  <title>One owner per topic</title>
+
+  <defs>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1d5a78"/>
+    </marker>
+    <style>
+      .ink   { fill: #233b47; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+      .muted { fill: #6b7c88; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+      .mono  { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+      .h     { font-size: 16px; font-weight: 700; }
+      .b     { font-size: 13px; }
+      .s     { font-size: 11.5px; }
+      .who   { font-size: 12px; font-weight: 700;
+               font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="330" rx="14" fill="#f6f8fa" stroke="#e1e7ec"/>
+
+  <text class="ink h" x="40" y="46">One share root, split into topics</text>
+  <text class="muted s" x="40" y="68">Each folder is claimed by one person. A marker inside it names the owner — so only they can transfer it.</text>
+
+  <!-- the share root -->
+  <rect x="40" y="88" width="430" height="196" rx="10" fill="#ffffff" stroke="#ccd6dd" stroke-width="1.5"/>
+  <text class="ink mono b" x="62" y="116">Projects/</text>
+
+  <!-- four topics, three owners -->
+  <g>
+    <rect x="62" y="130" width="386" height="32" rx="6" fill="#eef5f8"/>
+    <text class="ink mono b" x="78" y="151">Packaging/</text>
+    <text class="who" x="430" y="151" text-anchor="end" fill="#1d5a78">you</text>
+
+    <rect x="62" y="168" width="386" height="32" rx="6" fill="#f3f1ea"/>
+    <text class="ink mono b" x="78" y="189">Architecture/</text>
+    <text class="who" x="430" y="189" text-anchor="end" fill="#8a6a12">omar</text>
+
+    <rect x="62" y="206" width="386" height="32" rx="6" fill="#eef3ee"/>
+    <text class="ink mono b" x="78" y="227">Field/</text>
+    <text class="who" x="430" y="227" text-anchor="end" fill="#2e7d4f">sara</text>
+
+    <rect x="62" y="244" width="386" height="32" rx="6" fill="#eef5f8"/>
+    <text class="ink mono b" x="78" y="265">Reporting/</text>
+    <text class="who" x="430" y="265" text-anchor="end" fill="#1d5a78">you</text>
+  </g>
+
+  <!-- each owner publishes only their own -->
+  <path d="M478 186 H546" stroke="#1d5a78" stroke-width="2" marker-end="url(#a2)" fill="none"/>
+
+  <g>
+    <rect x="556" y="96" width="364" height="60" rx="10" fill="#ffffff" stroke="#ccd6dd" stroke-width="1.5"/>
+    <text class="who" x="578" y="122" fill="#1d5a78">you</text>
+    <text class="muted s" x="578" y="142">publish Packaging/ and Reporting/ — one parcel, to everyone</text>
+
+    <rect x="556" y="166" width="364" height="60" rx="10" fill="#ffffff" stroke="#ccd6dd" stroke-width="1.5"/>
+    <text class="who" x="578" y="192" fill="#8a6a12">omar</text>
+    <text class="muted s" x="578" y="212">publishes Architecture/ — nothing else is his to send</text>
+
+    <rect x="556" y="236" width="364" height="60" rx="10" fill="#ffffff" stroke="#ccd6dd" stroke-width="1.5"/>
+    <text class="who" x="578" y="262" fill="#2e7d4f">sara</text>
+    <text class="muted s" x="578" y="282">publishes Field/</text>
+  </g>
+
+  <text class="ink b" x="40" y="312">
+    Two people never write the same file — so nobody arbitrates, and a conflict becomes a signal that somebody worked outside their lane.
+  </text>
+</svg>

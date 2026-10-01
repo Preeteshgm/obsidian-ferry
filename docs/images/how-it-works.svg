@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" width="960" height="300"
+     role="img" aria-label="Your vault publishes a parcel; it travels by email, chat or a USB stick; their vault unpacks it after a preview.">
+  <title>How Ferry works</title>
+
+  <!-- The illustration carries its own light surface, so it reads the same on
+       GitHub's light and dark themes without two copies of the file. -->
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1d5a78"/>
+    </marker>
+    <style>
+      .ink   { fill: #233b47; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+      .muted { fill: #6b7c88; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+      .mono  { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+      .h     { font-size: 16px; font-weight: 700; }
+      .b     { font-size: 13px; }
+      .s     { font-size: 11.5px; }
+      .tag   { font-size: 10px; font-weight: 700; letter-spacing: .06em;
+               font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+      .card  { fill: #ffffff; stroke: #ccd6dd; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="300" rx="14" fill="#f6f8fa" stroke="#e1e7ec"/>
+
+  <!-- ─────────── your vault ─────────── -->
+  <rect class="card" x="36" y="58" width="252" height="168" rx="10"/>
+  <text class="ink h" x="58" y="88">Your vault</text>
+  <text class="muted s" x="58" y="108">the folder you share</text>
+
+  <rect x="58" y="124" width="208" height="30" rx="6" fill="#f0f4f7"/>
+  <text class="ink mono b" x="70" y="144">Projects/</text>
+
+  <text class="ink b" x="58" y="178">2 changed · 1 new</text>
+  <text class="muted s" x="58" y="198">in the topics you own</text>
+
+  <!-- publish -->
+  <path d="M296 150 H356" stroke="#1d5a78" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <text class="ink tag" x="326" y="138" text-anchor="middle" fill="#1d5a78">PUBLISH</text>
+
+  <!-- ─────────── the parcel ─────────── -->
+  <g>
+    <path d="M384 70 h142 l32 32 v128 a8 8 0 0 1 -8 8 h-166 a8 8 0 0 1 -8 -8 v-152 a8 8 0 0 1 8 -8 z"
+          fill="#ffffff" stroke="#c9a227" stroke-width="2"/>
+    <path d="M526 70 l32 32 h-32 z" fill="#f3e6bf" stroke="#c9a227" stroke-width="2"/>
+
+    <!-- a padlock: the parcel is encrypted -->
+    <g transform="translate(455,132)">
+      <path d="M-11 0 v-8 a11 11 0 0 1 22 0 v8" fill="none" stroke="#233b47" stroke-width="3"/>
+      <rect x="-16" y="0" width="32" height="24" rx="4" fill="#233b47"/>
+    </g>
+
+    <text class="ink mono s" x="455" y="186" text-anchor="middle">projects-2026-10-01.ferry</text>
+    <text class="muted s" x="455" y="206" text-anchor="middle">encrypted · only what changed</text>
+  </g>
+
+  <text class="muted s" x="455" y="246" text-anchor="middle">email · chat · a USB stick · any way you like</text>
+
+  <!-- unpack -->
+  <path d="M574 150 H634" stroke="#1d5a78" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  <text class="ink tag" x="604" y="138" text-anchor="middle" fill="#1d5a78">UNPACK</text>
+
+  <!-- ─────────── their vault ─────────── -->
+  <rect class="card" x="662" y="58" width="262" height="168" rx="10"/>
+  <text class="ink h" x="684" y="88">Their vault</text>
+  <text class="muted s" x="684" y="108">a preview, before anything is written</text>
+
+  <g>
+    <text class="tag" x="684" y="136" fill="#2e7d4f">NEW</text>
+    <text class="ink mono s" x="740" y="136">Welcome.md</text>
+
+    <text class="tag" x="684" y="160" fill="#1d5a78">CHANGED</text>
+    <text class="ink mono s" x="740" y="160">Notes/second.md</text>
+
+    <text class="tag" x="684" y="184" fill="#b3671a">CONFLICT</text>
+    <text class="ink mono s" x="740" y="184">Deck.canvas</text>
+  </g>
+  <text class="muted s" x="684" y="208">both versions kept — nothing overwritten</text>
+
+  <text class="muted b" x="480" y="282" text-anchor="middle">
+    No server. No accounts. Nobody online at the same time.
+  </text>
+</svg>
