@@ -1,7 +1,7 @@
 {
   "id": "ferry",
   "name": "Ferry",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "minAppVersion": "1.7.2",
   "description": "Carry a folder of notes between vaults as a single encrypted file. No server, no accounts: publish what you own, send it any way you like, unpack it after a preview.",
   "author": "Preetesh Magadum",

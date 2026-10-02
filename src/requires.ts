@@ -31,7 +31,16 @@ const RULES: Rule[] = [
 		text: /^\s*excalidraw-plugin\s*:/m,
 	},
 	{ id: "dataview", name: "Dataview", text: /```\s*dataviewjs?\b/ },
-	{ id: "obsidian-tasks-plugin", name: "Tasks", text: /```\s*tasks\b/ },
+	{
+		id: "obsidian-tasks-plugin",
+		name: "Tasks",
+		// A query block is the obvious fingerprint, but most notes carrying tasks
+		// never have one — they are plain checkbox lines with the plugin's date
+		// emoji on them. A plan written that way looked, to Ferry, like a note
+		// with no requirements at all, and arrived somewhere that could not read
+		// its dates with nothing to say so.
+		text: /```\s*tasks\b|- \[[ x\-/]\][^\n]*[\u{1F4C5}\u{1F6EB}\u{23F3}\u{2705}\u{2795}\u{1F501}]\s*\d{4}-\d{2}-\d{2}/u,
+	},
 	{ id: "obsidian-charts", name: "Charts", text: /```\s*chart\b/ },
 	{ id: "obsidian-kanban", name: "Kanban", text: /^\s*kanban-plugin\s*:/m },
 	{ id: "templater-obsidian", name: "Templater", text: /<%[\s\S]*?%>/ },
